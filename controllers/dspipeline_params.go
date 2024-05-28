@@ -84,6 +84,7 @@ type DSPAParams struct {
 	// pipeline pods
 	CustomCABundle *dspa.CABundle
 	DSPONamespace  string
+	DataValue      []string
 }
 
 type DBConnection struct {
@@ -625,6 +626,33 @@ func (p *DSPAParams) ExtractParams(ctx context.Context, dsp *dspa.DataSciencePip
 			p.APIServer.CustomServerConfig = &dspa.ScriptConfigMap{
 				Name: config.CustomServerConfigMapNamePrefix + dsp.Name,
 				Key:  config.CustomServerConfigMapNameKey,
+			}
+		}
+
+		if cfg := p.APIServer.CustomKfpLauncherConfig; cfg != nil && cfg.Name != "" {
+			if cm, err := util.GetConfigMap(ctx, cfg.Name, p.Namespace, client); err != nil {
+				// If the custom kfp-launcher configmap is not available, that is OK
+				if !apierrs.IsNotFound(err) {
+					log.Info(fmt.Sprintf("Encountered error when attempting to fetch ConfigMap: [%s], Error: %v", cfg.Name, err))
+					return err
+				}
+			} else {
+				// Consume all the required information.
+				configMapName := config.CustomKfpLauncherConfigMapName
+				dataValues := util.GetConfigMapValues(cm)
+
+				for _, val := range dataValues {
+					if val != "" {
+						p.DataValue = append(p.DataValue, val)
+					}
+				}
+
+				dataValue := strings.Join(p.DataValue, "\n")
+
+				p.APIServer.CustomKfpLauncherConfig = &dspa.KfpLauncherConfigMap{
+					Name: configMapName,
+					Data: dataValue,
+				}
 			}
 		}
 

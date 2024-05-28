@@ -80,6 +80,10 @@ type APIServer struct {
 	// for the api server to use instead.
 	CustomServerConfig *ScriptConfigMap `json:"customServerConfigMap,omitempty"`
 
+	// CustomKfpLauncherConfig is a custom config file that you can provide
+	// for the api server to use instead of the one provided with DSPO.
+	CustomKfpLauncherConfig *KfpLauncherConfigMap `json:"customKfpLauncherConfigMap,omitempty"`
+
 	// Default: true
 	// Deprecated: DSP V1 only, will be removed in the future.
 	// +kubebuilder:default:=true
@@ -155,6 +159,11 @@ type CABundle struct {
 type ScriptConfigMap struct {
 	Name string `json:"name,omitempty"`
 	Key  string `json:"key,omitempty"`
+}
+
+type KfpLauncherConfigMap struct {
+	Name string `json:"name,omitempty"`
+	Data string `json:"data,omitempty"`
 }
 
 type PersistenceAgent struct {
