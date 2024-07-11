@@ -55,7 +55,7 @@ WORKDIR /
 COPY --from=builder /workspace/manager .
 COPY config/internal config/internal
 ENV SEALIGHTS_LOG_LEVEL=info
-ENV SEALIGHTS_LAB_ID=openshift-ai-poc
+ENV SEALIGHTS_LAB_ID=openshift-ai-testcluster
 
 CMD export SEALIGHTS_TOKEN="${SL_TOKEN}"
 
