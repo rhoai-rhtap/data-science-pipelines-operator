@@ -42,6 +42,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const MlmdIsRequiredInV2Msg = "MLMD explicitly disabled in DSPA, but is a required component for V2 Pipelines"
+
 type DSPAParams struct {
 	IncludeOwnerReference                bool
 	UID                                  types.UID
@@ -499,7 +501,7 @@ func (p *DSPAParams) SetupMLMD(dsp *dspa.DataSciencePipelinesApplication, log lo
 				Deploy: true,
 			}
 		} else if !p.MLMD.Deploy {
-			return fmt.Errorf("MLMD explicitly disabled in DSPA, but is a required component for V2 Pipelines")
+			return fmt.Errorf(MlmdIsRequiredInV2Msg)
 		}
 	}
 	if p.MLMD != nil {
