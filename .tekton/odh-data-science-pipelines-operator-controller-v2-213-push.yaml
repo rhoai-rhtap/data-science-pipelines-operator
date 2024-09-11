@@ -22,7 +22,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhoai-tenant/rhoai-v2-13/odh-data-science-pipelines-operator-controller-v2-213:{{revision}}
+    value: quay.io/rhoai/odh-data-science-pipelines-operator-controller:{{revision}}
   - name: dockerfile
     value: Dockerfile
   - name: path-context
