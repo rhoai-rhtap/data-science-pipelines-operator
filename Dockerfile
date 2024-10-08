@@ -1,9 +1,13 @@
-# Build the manager binary
-FROM registry.access.redhat.com/ubi8/go-toolset:1.20 as builder
-ARG TARGETOS
-ARG TARGETARCH
+# Build arguments
+ARG SOURCE_CODE=.
+ARG CI_CONTAINER_VERSION="unknown"
+
+FROM registry.redhat.io/ubi8/go-toolset@sha256:4ec05fd5b355106cc0d990021a05b71bbfb9231e4f5bdc0c5316515edf6a1c96 as builder
+
+ARG SOURCE_CODE
 
 WORKDIR /workspace
+
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
@@ -15,18 +19,44 @@ RUN go mod download
 COPY main.go main.go
 COPY api/ api/
 COPY controllers/ controllers/
-
+COPY config/internal config/internal
 # Build
 # the GOARCH has not a default value to allow the binary be built according to the host where the command
 # was called. For example, if we call make docker-build in a local env which has the Apple Silicon M1 SO
 # the docker BUILDPLATFORM arg will be linux/arm64 when for Apple x86 it will be linux/amd64. Therefore,
 # by leaving it empty we can ensure that the container and binary shipped on it will have the same platform.
 USER root
-RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager main.go
+# Build
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o manager main.go
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.8
+FROM registry.redhat.io/ubi8/ubi-minimal:latest AS runtime
+
+## Build args to be used at this step
+ARG CI_CONTAINER_VERSION
+ARG USER=65532
+
+LABEL com.redhat.component="odh-data-science-pipelines-operator-controller-container" \
+      name="managed-open-data-hub/odh-data-science-pipelines-operator-controller-rhel8" \
+      version="${CI_CONTAINER_VERSION}" \
+      git.url="${CI_DATA_SCIENCE_PIPELINES_OPERATOR_UPSTREAM_URL}" \
+      git.commit="${CI_DATA_SCIENCE_PIPELINES_OPERATOR_UPSTREAM_COMMIT}" \
+      summary="odh-data-science-pipelines-operator-controller" \
+      io.openshift.expose-services="" \
+      io.k8s.display-name="data-science-pipelines-operator-controller" \
+      maintainer="['managed-open-data-hub@redhat.com']" \
+      description="Manages lifecycle of Data Science Pipelines Custom Resources and associated Kubernetes resources" \
+      com.redhat.license_terms="https://www.redhat.com/licenses/Red_Hat_Standard_EULA_20191108.pdf"
+
+## Install additional packages
+# TODO: is this needed?
+RUN microdnf install -y shadow-utils &&\
+    microdnf clean all
+
 WORKDIR /
 COPY --from=builder /workspace/manager .
-COPY config/internal config/internal
+COPY --from=builder /workspace/config/internal ./config/internal
+
+## Create a non-root user with UID 65532 and switch to it
+USER ${USER}:${USER}
 
 ENTRYPOINT ["/manager"]
