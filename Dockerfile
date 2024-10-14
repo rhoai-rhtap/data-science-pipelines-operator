@@ -35,17 +35,6 @@ FROM registry.redhat.io/ubi8/ubi-minimal:latest AS runtime
 ARG CI_CONTAINER_VERSION
 ARG USER=65532
 
-LABEL com.redhat.component="odh-data-science-pipelines-operator-controller-container" \
-      name="managed-open-data-hub/odh-data-science-pipelines-operator-controller-rhel8" \
-      version="${CI_CONTAINER_VERSION}" \
-      git.url="${CI_DATA_SCIENCE_PIPELINES_OPERATOR_UPSTREAM_URL}" \
-      git.commit="${CI_DATA_SCIENCE_PIPELINES_OPERATOR_UPSTREAM_COMMIT}" \
-      summary="odh-data-science-pipelines-operator-controller" \
-      io.openshift.expose-services="" \
-      io.k8s.display-name="data-science-pipelines-operator-controller" \
-      maintainer="['managed-open-data-hub@redhat.com']" \
-      description="Manages lifecycle of Data Science Pipelines Custom Resources and associated Kubernetes resources" \
-      com.redhat.license_terms="https://www.redhat.com/licenses/Red_Hat_Standard_EULA_20191108.pdf"
 
 ## Install additional packages
 # TODO: is this needed?
