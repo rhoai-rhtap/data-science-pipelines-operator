@@ -232,11 +232,11 @@ spec:
         - $(params.build-args[*])
       - name: BUILD_ARGS_FILE
         value: $(params.build-args-file)
-      - name: LABELS
-        value:
-          - version=v2.13.0
-          - git.url=$(params.git-url)
-          - git.commit=$(params.revision)
+      #- name: LABELS
+        #value:
+          #- version=v2.13.0
+          #- git.url=$(params.git-url)
+          #- git.commit=$(params.revision)
       runAfter:
       - prefetch-dependencies
       taskRef:
