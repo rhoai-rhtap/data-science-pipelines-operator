@@ -1,10 +1,10 @@
 module github.com/opendatahub-io/data-science-pipelines-operator
 
-go 1.20
+go 1.23
 
 require (
 	github.com/anthhub/forwarder v1.1.0
-	github.com/fsnotify/fsnotify v1.6.0
+	github.com/fsnotify/fsnotify v1.10.1
 	github.com/go-logr/logr v1.2.4
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-test/deep v1.1.0
