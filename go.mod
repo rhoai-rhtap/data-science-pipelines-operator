@@ -1,11 +1,11 @@
 module github.com/opendatahub-io/data-science-pipelines-operator
 
-go 1.20
+go 1.21
 
 require (
 	github.com/anthhub/forwarder v1.1.0
 	github.com/fsnotify/fsnotify v1.6.0
-	github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr v1.4.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-test/deep v1.1.0
 	github.com/golang/glog v1.1.0
@@ -102,7 +102,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.27.2 // indirect
 	k8s.io/cli-runtime v0.24.17 // indirect
 	k8s.io/component-base v0.27.2 // indirect
-	k8s.io/klog/v2 v2.90.1 // indirect
+	k8s.io/klog/v2 v2.140.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f // indirect
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
