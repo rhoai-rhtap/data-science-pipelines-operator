@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/anthhub/forwarder v1.1.0
 	github.com/fsnotify/fsnotify v1.6.0
-	github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr v1.4.4
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-test/deep v1.1.0
 	github.com/golang/glog v1.1.0
